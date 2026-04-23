@@ -543,6 +543,22 @@
           "numberProperties": [],
           "stringProperties": [],
           "initialVariables": []
+        },
+        {
+          "angle": 0,
+          "customSize": false,
+          "height": 0,
+          "keepRatio": true,
+          "layer": "",
+          "name": "moveCheck",
+          "persistentUuid": "d35c00ee-fd95-4f15-98d1-08a732791788",
+          "width": 0,
+          "x": 222,
+          "y": 472,
+          "zOrder": 10,
+          "numberProperties": [],
+          "stringProperties": [],
+          "initialVariables": []
         }
       ],
       "objects": [
@@ -565,14 +581,56 @@
               "value": 2
             },
             {
-              "name": "LR_Dir",
+              "name": "LR_Speed",
               "type": "number",
               "value": 0
             },
             {
-              "name": "UD_Dir",
+              "name": "customSpeed",
+              "type": "structure",
+              "children": [
+                {
+                  "name": "X",
+                  "type": "number",
+                  "value": 0
+                },
+                {
+                  "name": "Y",
+                  "type": "number",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Dash",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "name": "maxSpeed",
               "type": "number",
-              "value": 0
+              "value": 500
+            },
+            {
+              "name": "Friction",
+              "type": "number",
+              "value": 0.3
+            },
+            {
+              "name": "inputVector",
+              "type": "structure",
+              "children": [
+                {
+                  "name": "X",
+                  "type": "number",
+                  "value": 0
+                },
+                {
+                  "name": "Y",
+                  "type": "number",
+                  "value": 0
+                }
+              ]
             }
           ],
           "effects": [],
@@ -1624,6 +1682,49 @@
               ]
             }
           ]
+        },
+        {
+          "assetStoreId": "",
+          "bold": false,
+          "italic": false,
+          "name": "moveCheck",
+          "smoothed": true,
+          "type": "TextObject::Text",
+          "underlined": false,
+          "variables": [],
+          "effects": [],
+          "behaviors": [],
+          "string": "Text",
+          "font": "",
+          "textAlignment": "left",
+          "characterSize": 20,
+          "color": {
+            "b": 0,
+            "g": 0,
+            "r": 0
+          },
+          "content": {
+            "bold": false,
+            "isOutlineEnabled": false,
+            "isShadowEnabled": false,
+            "italic": false,
+            "outlineColor": "255;255;255",
+            "outlineThickness": 2,
+            "shadowAngle": 90,
+            "shadowBlurRadius": 2,
+            "shadowColor": "0;0;0",
+            "shadowDistance": 4,
+            "shadowOpacity": 127,
+            "smoothed": true,
+            "underlined": false,
+            "text": "Text",
+            "font": "",
+            "textAlignment": "left",
+            "verticalTextAlignment": "top",
+            "characterSize": 20,
+            "lineHeight": 0,
+            "color": "0;0;0"
+          }
         }
       ],
       "objectsFolderStructure": {
@@ -1664,6 +1765,9 @@
           },
           {
             "objectName": "Projectile"
+          },
+          {
+            "objectName": "moveCheck"
           }
         ]
       },
@@ -1719,6 +1823,7 @@
               "comment": "Check the Input Direction for frame"
             },
             {
+              "folded": true,
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [],
               "actions": [
@@ -1728,7 +1833,7 @@
                   },
                   "parameters": [
                     "Player",
-                    "LR_Dir",
+                    "inputVector",
                     "=",
                     "0"
                   ]
@@ -1755,7 +1860,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "LR_Dir",
+                        "inputVector.X",
                         "+",
                         "1"
                       ]
@@ -1782,32 +1887,13 @@
                       },
                       "parameters": [
                         "Player",
-                        "LR_Dir",
+                        "inputVector.X",
                         "-",
                         "1"
                       ]
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "BuiltinCommonInstructions::Standard",
-              "conditions": [],
-              "actions": [
-                {
-                  "type": {
-                    "value": "SetNumberObjectVariable"
-                  },
-                  "parameters": [
-                    "Player",
-                    "UD_Dir",
-                    "=",
-                    "0"
-                  ]
-                }
-              ],
-              "events": [
+                },
                 {
                   "type": "BuiltinCommonInstructions::Standard",
                   "conditions": [
@@ -1828,7 +1914,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "UD_Dir",
+                        "inputVector.Y",
                         "+",
                         "1"
                       ]
@@ -1855,7 +1941,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "UD_Dir",
+                        "inputVector.Y",
                         "-",
                         "1"
                       ]
@@ -1863,35 +1949,64 @@
                   ]
                 }
               ]
-            }
-          ],
-          "parameters": []
-        },
-        {
-          "colorB": 228,
-          "colorG": 176,
-          "colorR": 74,
-          "creationTime": 0,
-          "name": "Player Movement",
-          "source": "",
-          "type": "BuiltinCommonInstructions::Group",
-          "events": [
+            },
             {
               "type": "BuiltinCommonInstructions::Comment",
               "color": {
-                "b": 226,
-                "g": 144,
-                "r": 74,
+                "b": 109,
+                "g": 230,
+                "r": 255,
                 "textB": 0,
                 "textG": 0,
                 "textR": 0
               },
-              "comment": "Player Midair jump controller limit is set high to be never used"
+              "comment": "Check for Jumps and Dashes"
             },
             {
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [],
-              "actions": []
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetBooleanObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "Dash",
+                    "False",
+                    "1"
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"j\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetBooleanObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "Dash",
+                        "True",
+                        "1"
+                      ]
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "BuiltinCommonInstructions::Standard",
@@ -1935,6 +2050,199 @@
                   ]
                 }
               ]
+            }
+          ],
+          "parameters": []
+        },
+        {
+          "colorB": 228,
+          "colorG": 176,
+          "colorR": 74,
+          "creationTime": 0,
+          "name": "Player Movement",
+          "source": "",
+          "type": "BuiltinCommonInstructions::Group",
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 109,
+                "g": 230,
+                "r": 255,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "\"Walking\" w/ Shitty Momentum"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.X",
+                    "=",
+                    "lerp(Player.customSpeed.X, Player.maxSpeed * Player.inputVector.X, Player.Friction)"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 109,
+                "g": 230,
+                "r": 255,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "Dash w/ Normalised Direction"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "BooleanObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "Dash",
+                    "True",
+                    ""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "KeyFromTextPressed"
+                  },
+                  "parameters": [
+                    "",
+                    "\"j\""
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.X",
+                    "=",
+                    "Player.maxSpeed * \nPlayer.inputVector.X /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "SetNumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.Y",
+                    "=",
+                    "Player.maxSpeed * \nPlayer.inputVector.Y /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 109,
+                "g": 230,
+                "r": 255,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "No Floor clipping lol"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "PlatformBehavior::IsOnFloor"
+                  },
+                  "parameters": [
+                    "Player",
+                    "PlatformerObject"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "NumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.Y",
+                    "<",
+                    "0"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.Y",
+                    "=",
+                    "0"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 109,
+                "g": 230,
+                "r": 255,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "Final Force"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [],
+              "actions": [
+                {
+                  "type": {
+                    "value": "AddForceXY"
+                  },
+                  "parameters": [
+                    "Player",
+                    "Player.customSpeed.X",
+                    "Player.customSpeed.X",
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 226,
+                "g": 144,
+                "r": 74,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "Player Midair jump controller limit is set high to be never used"
             },
             {
               "type": "BuiltinCommonInstructions::Standard",
@@ -2751,6 +3059,17 @@
                     "Text",
                     "=",
                     "Player.Ammo"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "TextContainerCapability::TextContainerBehavior::SetValue"
+                  },
+                  "parameters": [
+                    "moveCheck",
+                    "Text",
+                    "=",
+                    "\"Input: \" + Player.inputVector.X + \",\" + Player.inputVector.Y + NewLine() + \"Speed: \" + Player.LR_Speed"
                   ]
                 }
               ]
