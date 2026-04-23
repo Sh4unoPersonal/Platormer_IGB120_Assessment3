@@ -581,12 +581,27 @@
               "value": 2
             },
             {
-              "name": "LR_Speed",
-              "type": "number",
-              "value": 0
+              "name": "Dash",
+              "type": "boolean",
+              "value": true
             },
             {
-              "name": "customSpeed",
+              "name": "maxSpeed",
+              "type": "number",
+              "value": 1000
+            },
+            {
+              "name": "dashSpeed",
+              "type": "number",
+              "value": 1500
+            },
+            {
+              "name": "Friction",
+              "type": "number",
+              "value": 0.3
+            },
+            {
+              "name": "inputVector",
               "type": "structure",
               "children": [
                 {
@@ -602,22 +617,7 @@
               ]
             },
             {
-              "name": "Dash",
-              "type": "boolean",
-              "value": true
-            },
-            {
-              "name": "maxSpeed",
-              "type": "number",
-              "value": 500
-            },
-            {
-              "name": "Friction",
-              "type": "number",
-              "value": 0.3
-            },
-            {
-              "name": "inputVector",
+              "name": "customSpeed",
               "type": "structure",
               "children": [
                 {
@@ -682,6 +682,7 @@
               "PlatformerCharacter": "PlatformerObject"
             },
             {
+              "gravity": 1500,
               "name": "PlatformerObject",
               "type": "PlatformBehavior::PlatformerObjectBehavior",
               "jumpSpeed": 700,
@@ -690,7 +691,6 @@
               "canGrabPlatforms": false,
               "canGrabWithoutMoving": false,
               "deceleration": 1500,
-              "gravity": 1000,
               "ignoreDefaultControls": true,
               "jumpSustainTime": 0.2,
               "ladderClimbingSpeed": 150,
@@ -1773,33 +1773,96 @@
       },
       "events": [
         {
+          "colorB": 74,
+          "colorG": 74,
+          "colorR": 228,
+          "creationTime": 0,
+          "name": "Start",
+          "source": "",
+          "type": "BuiltinCommonInstructions::Group",
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "SceneJustBegins"
+                  },
+                  "parameters": [
+                    ""
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "Hide"
+                  },
+                  "parameters": [
+                    "LeftPos"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "Hide"
+                  },
+                  "parameters": [
+                    "RightPos"
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "ResetTimer"
+                  },
+                  "parameters": [
+                    "",
+                    "\"AmmoRegeneration\""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "ResetObjectTimer"
+                  },
+                  "parameters": [
+                    "Player",
+                    "\"dashCooldown\""
+                  ]
+                }
+              ]
+            }
+          ],
+          "parameters": []
+        },
+        {
           "colorB": 228,
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
+          "folded": true,
           "name": "Player Camera",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
-          "events": [],
-          "parameters": []
-        },
-        {
-          "type": "BuiltinCommonInstructions::Standard",
-          "conditions": [],
-          "actions": [
+          "events": [
             {
-              "type": {
-                "value": "CenterCameraOnObject"
-              },
-              "parameters": [
-                "",
-                "Player",
-                "no",
-                "",
-                ""
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [],
+              "actions": [
+                {
+                  "type": {
+                    "value": "CenterCameraOnObject"
+                  },
+                  "parameters": [
+                    "",
+                    "Player",
+                    "no",
+                    "",
+                    ""
+                  ]
+                }
               ]
             }
-          ]
+          ],
+          "parameters": []
         },
         {
           "colorB": 228,
@@ -1915,7 +1978,7 @@
                       "parameters": [
                         "Player",
                         "inputVector.Y",
-                        "+",
+                        "-",
                         "1"
                       ]
                     }
@@ -1942,7 +2005,7 @@
                       "parameters": [
                         "Player",
                         "inputVector.Y",
-                        "-",
+                        "+",
                         "1"
                       ]
                     }
@@ -1963,6 +2026,7 @@
               "comment": "Check for Jumps and Dashes"
             },
             {
+              "folded": true,
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [],
               "actions": [
@@ -1990,6 +2054,17 @@
                         "",
                         "\"j\""
                       ]
+                    },
+                    {
+                      "type": {
+                        "value": "CompareObjectTimer"
+                      },
+                      "parameters": [
+                        "Player",
+                        "\"dashCooldown\"",
+                        ">",
+                        "0.5"
+                      ]
                     }
                   ],
                   "actions": [
@@ -2002,6 +2077,15 @@
                         "Dash",
                         "True",
                         "1"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "ResetObjectTimer"
+                      },
+                      "parameters": [
+                        "Player",
+                        "\"dashCooldown\""
                       ]
                     }
                   ]
@@ -2063,6 +2147,30 @@
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
           "events": [
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 5,
+                "g": 117,
+                "r": 65,
+                "textB": 255,
+                "textG": 255,
+                "textR": 255
+              },
+              "comment": "DO THE AIR SPEED GROUND SPEED THING LATER MARCIE YOU IDIOT"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 5,
+                "g": 117,
+                "r": 65,
+                "textB": 255,
+                "textG": 255,
+                "textR": 255
+              },
+              "comment": "Gravity would probably be good too :)"
+            },
             {
               "type": "BuiltinCommonInstructions::Comment",
               "color": {
@@ -2137,7 +2245,7 @@
                     "Player",
                     "customSpeed.X",
                     "=",
-                    "Player.maxSpeed * \nPlayer.inputVector.X /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
+                    "Player.dashSpeed * \nPlayer.inputVector.X /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
                   ]
                 },
                 {
@@ -2148,7 +2256,7 @@
                     "Player",
                     "customSpeed.Y",
                     "=",
-                    "Player.maxSpeed * \nPlayer.inputVector.Y /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
+                    "Player.dashSpeed * \nPlayer.inputVector.Y /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X+ Player.inputVector.Y*Player.inputVector.Y\n)"
                   ]
                 }
               ]
@@ -2184,7 +2292,7 @@
                   "parameters": [
                     "Player",
                     "customSpeed.Y",
-                    "<",
+                    ">",
                     "0"
                   ]
                 }
@@ -2206,12 +2314,24 @@
             {
               "type": "BuiltinCommonInstructions::Comment",
               "color": {
-                "b": 109,
-                "g": 230,
-                "r": 255,
+                "b": 226,
+                "g": 144,
+                "r": 74,
                 "textB": 0,
                 "textG": 0,
                 "textR": 0
+              },
+              "comment": "Player Midair jump controller limit is set high to be never used"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 27,
+                "g": 2,
+                "r": 208,
+                "textB": 255,
+                "textG": 255,
+                "textR": 255
               },
               "comment": "Final Force"
             },
@@ -2226,25 +2346,14 @@
                   "parameters": [
                     "Player",
                     "Player.customSpeed.X",
-                    "Player.customSpeed.X",
+                    "Player.customSpeed.Y",
                     ""
                   ]
                 }
               ]
             },
             {
-              "type": "BuiltinCommonInstructions::Comment",
-              "color": {
-                "b": 226,
-                "g": 144,
-                "r": 74,
-                "textB": 0,
-                "textG": 0,
-                "textR": 0
-              },
-              "comment": "Player Midair jump controller limit is set high to be never used"
-            },
-            {
+              "folded": true,
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [
                 {
@@ -2985,59 +3094,6 @@
           "parameters": []
         },
         {
-          "colorB": 74,
-          "colorG": 74,
-          "colorR": 228,
-          "creationTime": 0,
-          "folded": true,
-          "name": "Start",
-          "source": "",
-          "type": "BuiltinCommonInstructions::Group",
-          "events": [
-            {
-              "type": "BuiltinCommonInstructions::Standard",
-              "conditions": [
-                {
-                  "type": {
-                    "value": "SceneJustBegins"
-                  },
-                  "parameters": [
-                    ""
-                  ]
-                }
-              ],
-              "actions": [
-                {
-                  "type": {
-                    "value": "Hide"
-                  },
-                  "parameters": [
-                    "LeftPos"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "Hide"
-                  },
-                  "parameters": [
-                    "RightPos"
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "ResetTimer"
-                  },
-                  "parameters": [
-                    "",
-                    "\"AmmoRegeneration\""
-                  ]
-                }
-              ]
-            }
-          ],
-          "parameters": []
-        },
-        {
           "colorB": 224,
           "colorG": 16,
           "colorR": 189,
@@ -3069,7 +3125,7 @@
                     "moveCheck",
                     "Text",
                     "=",
-                    "\"Input: \" + Player.inputVector.X + \",\" + Player.inputVector.Y + NewLine() + \"Speed: \" + Player.LR_Speed"
+                    "\"Input: \" + Player.inputVector.X + \",\" + Player.inputVector.Y + NewLine() + \n\"Speed: \" + Player.customSpeed.X + NewLine() +\n\"Dash: \" + Player.Dash + NewLine() "
                   ]
                 }
               ]
