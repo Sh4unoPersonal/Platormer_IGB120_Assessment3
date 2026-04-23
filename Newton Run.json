@@ -1,7 +1,7 @@
 {
   "firstLayout": "",
   "gdVersion": {
-    "build": 265,
+    "build": 266,
     "major": 5,
     "minor": 6,
     "revision": 0
@@ -1544,7 +1544,7 @@
               "name": "Physics2",
               "type": "Physics2::Physics2Behavior",
               "bodyType": "Dynamic",
-              "bullet": false,
+              "bullet": true,
               "fixedRotation": false,
               "canSleep": true,
               "shape": "Box",
@@ -1692,7 +1692,6 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Movement",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
@@ -1926,13 +1925,77 @@
                     },
                     {
                       "type": {
-                        "value": "AddForceXY"
+                        "value": "Physics2::ApplyForce"
                       },
                       "parameters": [
                         "Projectile",
+                        "Physics2",
                         "0",
-                        "999",
-                        "0"
+                        "250",
+                        "Player.PointX(\"Centre\")",
+                        "Player.PointY(\"Centre\")"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextJustPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"Down\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "AdvancedJump::DiveDash::SimulateDiveKey"
+                      },
+                      "parameters": [
+                        "Player",
+                        "DiveDash",
+                        ""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "Ammo",
+                        "-",
+                        "1"
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "Create"
+                      },
+                      "parameters": [
+                        "",
+                        "Projectile",
+                        "Player.PointX(\"Center\")",
+                        "Player.PointY(\"Center\")",
+                        ""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "Physics2::ApplyForce"
+                      },
+                      "parameters": [
+                        "Projectile",
+                        "Physics2",
+                        "0",
+                        "-350",
+                        "Player.PointX(\"Centre\")",
+                        "Player.PointY(\"Centre\")"
                       ]
                     }
                   ]
@@ -1999,6 +2062,31 @@
                         "-",
                         "1"
                       ]
+                    },
+                    {
+                      "type": {
+                        "value": "Create"
+                      },
+                      "parameters": [
+                        "",
+                        "Projectile",
+                        "Player.PointX(\"Center\")",
+                        "Player.PointY(\"Center\")",
+                        ""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "Physics2::ApplyForce"
+                      },
+                      "parameters": [
+                        "Projectile",
+                        "Physics2",
+                        "250",
+                        "0",
+                        "Player.PointX(\"Centre\")",
+                        "Player.PointY(\"Centre\")"
+                      ]
                     }
                   ]
                 },
@@ -2064,42 +2152,30 @@
                         "-",
                         "1"
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "BuiltinCommonInstructions::Standard",
-                  "conditions": [
+                    },
                     {
                       "type": {
-                        "value": "KeyFromTextJustPressed"
+                        "value": "Create"
                       },
                       "parameters": [
                         "",
-                        "\"Down\""
-                      ]
-                    }
-                  ],
-                  "actions": [
-                    {
-                      "type": {
-                        "value": "AdvancedJump::DiveDash::SimulateDiveKey"
-                      },
-                      "parameters": [
-                        "Player",
-                        "DiveDash",
+                        "Projectile",
+                        "Player.PointX(\"Center\")",
+                        "Player.PointY(\"Center\")",
                         ""
                       ]
                     },
                     {
                       "type": {
-                        "value": "SetNumberObjectVariable"
+                        "value": "Physics2::ApplyForce"
                       },
                       "parameters": [
-                        "Player",
-                        "Ammo",
-                        "-",
-                        "1"
+                        "Projectile",
+                        "Physics2",
+                        "-250",
+                        "0",
+                        "Player.PointX(\"Centre\")",
+                        "Player.PointY(\"Centre\")"
                       ]
                     }
                   ]
@@ -2114,7 +2190,6 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Animation",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
@@ -2244,7 +2319,6 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Combat",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
@@ -2294,7 +2368,6 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Ammo Management",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
