@@ -601,7 +601,7 @@
               "value": 0.3
             },
             {
-              "name": "inputVector",
+              "name": "customSpeed",
               "type": "structure",
               "children": [
                 {
@@ -617,18 +617,45 @@
               ]
             },
             {
-              "name": "customSpeed",
+              "name": "jumpHeight",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "name": "Drag",
+              "type": "number",
+              "value": 0.98
+            },
+            {
+              "name": "input",
               "type": "structure",
               "children": [
                 {
-                  "name": "X",
-                  "type": "number",
-                  "value": 0
+                  "name": "Dash",
+                  "type": "boolean",
+                  "value": false
                 },
                 {
-                  "name": "Y",
-                  "type": "number",
-                  "value": 0
+                  "name": "Jump",
+                  "type": "boolean",
+                  "value": false
+                },
+                {
+                  "folded": true,
+                  "name": "Vector",
+                  "type": "structure",
+                  "children": [
+                    {
+                      "name": "X",
+                      "type": "number",
+                      "value": 0
+                    },
+                    {
+                      "name": "Y",
+                      "type": "number",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             }
@@ -682,9 +709,9 @@
               "PlatformerCharacter": "PlatformerObject"
             },
             {
-              "gravity": 1500,
               "name": "PlatformerObject",
               "type": "PlatformBehavior::PlatformerObjectBehavior",
+              "gravity": 0,
               "jumpSpeed": 700,
               "acceleration": 1500,
               "canGoDownFromJumpthru": false,
@@ -1886,7 +1913,6 @@
               "comment": "Check the Input Direction for frame"
             },
             {
-              "folded": true,
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [],
               "actions": [
@@ -1896,7 +1922,7 @@
                   },
                   "parameters": [
                     "Player",
-                    "inputVector",
+                    "input.Vector",
                     "=",
                     "0"
                   ]
@@ -1923,7 +1949,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "inputVector.X",
+                        "input.Vector.X",
                         "+",
                         "1"
                       ]
@@ -1950,7 +1976,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "inputVector.X",
+                        "input.Vector.X",
                         "-",
                         "1"
                       ]
@@ -1977,7 +2003,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "inputVector.Y",
+                        "input.Vector.Y",
                         "-",
                         "1"
                       ]
@@ -2004,7 +2030,7 @@
                       },
                       "parameters": [
                         "Player",
-                        "inputVector.Y",
+                        "input.Vector.Y",
                         "+",
                         "1"
                       ]
@@ -2024,6 +2050,18 @@
                 "textR": 0
               },
               "comment": "Check for Jumps and Dashes"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 5,
+                "g": 117,
+                "r": 65,
+                "textB": 255,
+                "textG": 255,
+                "textR": 255
+              },
+              "comment": "Jump Sustain?"
             },
             {
               "folded": true,
@@ -2097,40 +2135,33 @@
               "conditions": [
                 {
                   "type": {
-                    "value": "BuiltinCommonInstructions::And"
+                    "value": "KeyFromTextJustPressed"
                   },
-                  "parameters": [],
-                  "subInstructions": [
-                    {
-                      "type": {
-                        "value": "KeyFromTextJustPressed"
-                      },
-                      "parameters": [
-                        "",
-                        "\"Space\""
-                      ]
-                    },
-                    {
-                      "type": {
-                        "value": "PlatformBehavior::IsOnFloor"
-                      },
-                      "parameters": [
-                        "Player",
-                        "PlatformerObject"
-                      ]
-                    }
+                  "parameters": [
+                    "",
+                    "\"Space\""
+                  ]
+                },
+                {
+                  "type": {
+                    "value": "PlatformBehavior::IsOnFloor"
+                  },
+                  "parameters": [
+                    "Player",
+                    "PlatformerObject"
                   ]
                 }
               ],
               "actions": [
                 {
                   "type": {
-                    "value": "PlatformBehavior::SimulateControl"
+                    "value": "SetNumberObjectVariable"
                   },
                   "parameters": [
                     "Player",
-                    "PlatformerObject",
-                    "\"Jump\""
+                    "customSpeed.Y",
+                    "=",
+                    "Player.jumpHeight"
                   ]
                 }
               ]
@@ -2162,18 +2193,6 @@
             {
               "type": "BuiltinCommonInstructions::Comment",
               "color": {
-                "b": 5,
-                "g": 117,
-                "r": 65,
-                "textB": 255,
-                "textG": 255,
-                "textR": 255
-              },
-              "comment": "Gravity would probably be good too :)"
-            },
-            {
-              "type": "BuiltinCommonInstructions::Comment",
-              "color": {
                 "b": 109,
                 "g": 230,
                 "r": 255,
@@ -2195,7 +2214,7 @@
                     "Player",
                     "customSpeed.X",
                     "=",
-                    "lerp(Player.customSpeed.X, Player.maxSpeed * Player.inputVector.X, Player.Friction)"
+                    "lerp(Player.customSpeed.X, Player.maxSpeed * Player.input.Vector.X, Player.Friction)"
                   ]
                 }
               ]
@@ -2245,7 +2264,7 @@
                     "Player",
                     "customSpeed.X",
                     "=",
-                    "Player.dashSpeed * \nPlayer.inputVector.X /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X + Player.inputVector.Y*Player.inputVector.Y\n)"
+                    "Player.dashSpeed * \nPlayer.input.Vector.X /\nsqrt(\nPlayer.input.Vector.X*Player.input.Vector.X + Player.input.Vector.Y*Player.input.Vector.Y\n)"
                   ]
                 },
                 {
@@ -2256,7 +2275,91 @@
                     "Player",
                     "customSpeed.Y",
                     "=",
-                    "Player.dashSpeed * \nPlayer.inputVector.Y /\nsqrt(\nPlayer.inputVector.X*Player.inputVector.X+ Player.inputVector.Y*Player.inputVector.Y\n)"
+                    "Player.dashSpeed * \nPlayer.input.Vector.Y /\nsqrt(\nPlayer.input.Vector.X*Player.input.Vector.X+ Player.input.Vector.Y*Player.input.Vector.Y\n)"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "value": "PlatformBehavior::IsOnFloor"
+                  },
+                  "parameters": [
+                    "Player",
+                    "PlatformerObject"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "ResetObjectTimer"
+                  },
+                  "parameters": [
+                    "Player",
+                    "\"airTime\""
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BuiltinCommonInstructions::Comment",
+              "color": {
+                "b": 134,
+                "g": 233,
+                "r": 184,
+                "textB": 0,
+                "textG": 0,
+                "textR": 0
+              },
+              "comment": "Gravity"
+            },
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [
+                {
+                  "type": {
+                    "inverted": true,
+                    "value": "PlatformBehavior::IsOnFloor"
+                  },
+                  "parameters": [
+                    "Player",
+                    "PlatformerObject"
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": {
+                    "value": "SetNumberObjectVariable"
+                  },
+                  "parameters": [
+                    "Player",
+                    "customSpeed.Y",
+                    "+",
+                    "Player.PlatformerObject::Gravity()"
+                  ]
+                }
+              ],
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "customSpeed.Y",
+                        "*",
+                        "Player.Drag"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -2305,23 +2408,11 @@
                   "parameters": [
                     "Player",
                     "customSpeed.Y",
-                    "=",
+                    "-",
                     "0"
                   ]
                 }
               ]
-            },
-            {
-              "type": "BuiltinCommonInstructions::Comment",
-              "color": {
-                "b": 226,
-                "g": 144,
-                "r": 74,
-                "textB": 0,
-                "textG": 0,
-                "textR": 0
-              },
-              "comment": "Player Midair jump controller limit is set high to be never used"
             },
             {
               "type": "BuiltinCommonInstructions::Comment",
@@ -3125,7 +3216,7 @@
                     "moveCheck",
                     "Text",
                     "=",
-                    "\"Input: \" + Player.inputVector.X + \",\" + Player.inputVector.Y + NewLine() + \n\"Speed: \" + Player.customSpeed.X + NewLine() +\n\"Dash: \" + Player.Dash + NewLine() "
+                    "\"Input: \" + Player.input.Vector.X + \",\" + Player.input.Vector.Y + NewLine() + \n\"Speed: \" + Player.customSpeed.X + NewLine() +\n\"Speed: \" + Player.customSpeed.Y + NewLine() +\n\"Dash: \" + Player.Dash + NewLine()"
                   ]
                 }
               ]
