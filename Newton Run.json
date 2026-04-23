@@ -563,6 +563,16 @@
               "name": "MaxAmmo",
               "type": "number",
               "value": 2
+            },
+            {
+              "name": "LR_Input",
+              "type": "number",
+              "value": 0
+            },
+            {
+              "name": "UD_Input",
+              "type": "number",
+              "value": 0
             }
           ],
           "effects": [],
@@ -1666,7 +1676,382 @@
           "name": "Player Camera",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
-          "events": [],
+          "events": [
+            {
+              "type": "BuiltinCommonInstructions::Standard",
+              "conditions": [],
+              "actions": []
+            }
+          ],
+          "parameters": []
+        },
+        {
+          "colorB": 228,
+          "colorG": 176,
+          "colorR": 74,
+          "creationTime": 0,
+          "folded": true,
+          "name": "Controls",
+          "source": "",
+          "type": "BuiltinCommonInstructions::Group",
+          "events": [
+            {
+              "colorB": 228,
+              "colorG": 176,
+              "colorR": 74,
+              "creationTime": 0,
+              "folded": true,
+              "name": "U/D",
+              "source": "",
+              "type": "BuiltinCommonInstructions::Group",
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "BuiltinCommonInstructions::Or"
+                      },
+                      "parameters": [],
+                      "subInstructions": [
+                        {
+                          "type": {
+                            "value": "BuiltinCommonInstructions::And"
+                          },
+                          "parameters": [],
+                          "subInstructions": [
+                            {
+                              "type": {
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"w\""
+                              ]
+                            },
+                            {
+                              "type": {
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"s\""
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": {
+                            "value": "BuiltinCommonInstructions::And"
+                          },
+                          "parameters": [],
+                          "subInstructions": [
+                            {
+                              "type": {
+                                "inverted": true,
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"w\""
+                              ]
+                            },
+                            {
+                              "type": {
+                                "inverted": true,
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"s\""
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "UD_Input",
+                        "=",
+                        "0"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"w\""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "inverted": true,
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"s\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "UD_Input",
+                        "=",
+                        "1"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"s\""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "inverted": true,
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"w\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "UD_Input",
+                        "=",
+                        "-1"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Comment",
+                  "color": {
+                    "b": 226,
+                    "g": 144,
+                    "r": 74,
+                    "textB": 0,
+                    "textG": 0,
+                    "textR": 0
+                  },
+                  "comment": "Player Midair jump controller limit is set high to be never used"
+                }
+              ],
+              "parameters": []
+            },
+            {
+              "colorB": 228,
+              "colorG": 176,
+              "colorR": 74,
+              "creationTime": 0,
+              "name": "L/R",
+              "source": "",
+              "type": "BuiltinCommonInstructions::Group",
+              "events": [
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "BuiltinCommonInstructions::Or"
+                      },
+                      "parameters": [],
+                      "subInstructions": [
+                        {
+                          "type": {
+                            "value": "BuiltinCommonInstructions::And"
+                          },
+                          "parameters": [],
+                          "subInstructions": [
+                            {
+                              "type": {
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"d\""
+                              ]
+                            },
+                            {
+                              "type": {
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"a\""
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": {
+                            "value": "BuiltinCommonInstructions::And"
+                          },
+                          "parameters": [],
+                          "subInstructions": [
+                            {
+                              "type": {
+                                "inverted": true,
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"d\""
+                              ]
+                            },
+                            {
+                              "type": {
+                                "inverted": true,
+                                "value": "KeyFromTextPressed"
+                              },
+                              "parameters": [
+                                "",
+                                "\"a\""
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "LR_Input",
+                        "=",
+                        "0"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"d\""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "inverted": true,
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"a\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "LR_Input",
+                        "=",
+                        "1"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Standard",
+                  "conditions": [
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"a\""
+                      ]
+                    },
+                    {
+                      "type": {
+                        "value": "KeyFromTextPressed"
+                      },
+                      "parameters": [
+                        "",
+                        "\"d\""
+                      ]
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": {
+                        "value": "SetNumberObjectVariable"
+                      },
+                      "parameters": [
+                        "Player",
+                        "LR_Input",
+                        "=",
+                        "-1"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BuiltinCommonInstructions::Comment",
+                  "color": {
+                    "b": 226,
+                    "g": 144,
+                    "r": 74,
+                    "textB": 0,
+                    "textG": 0,
+                    "textR": 0
+                  },
+                  "comment": "Player Midair jump controller limit is set high to be never used"
+                }
+              ],
+              "parameters": []
+            }
+          ],
           "parameters": []
         },
         {
@@ -1692,95 +2077,10 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Movement",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
           "events": [
-            {
-              "type": "BuiltinCommonInstructions::Comment",
-              "color": {
-                "b": 226,
-                "g": 144,
-                "r": 74,
-                "textB": 0,
-                "textG": 0,
-                "textR": 0
-              },
-              "comment": "Player Midair jump controller limit is set high to be never used"
-            },
-            {
-              "type": "BuiltinCommonInstructions::Standard",
-              "conditions": [
-                {
-                  "type": {
-                    "value": "KeyFromTextPressed"
-                  },
-                  "parameters": [
-                    "",
-                    "\"a\""
-                  ]
-                }
-              ],
-              "actions": [
-                {
-                  "type": {
-                    "value": "PlatformBehavior::SimulateControl"
-                  },
-                  "parameters": [
-                    "Player",
-                    "PlatformerObject",
-                    "\"Left\""
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "FlippableCapability::FlippableBehavior::FlipX"
-                  },
-                  "parameters": [
-                    "Player",
-                    "Flippable",
-                    "yes"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "BuiltinCommonInstructions::Standard",
-              "conditions": [
-                {
-                  "type": {
-                    "value": "KeyFromTextPressed"
-                  },
-                  "parameters": [
-                    "",
-                    "\"d\""
-                  ]
-                }
-              ],
-              "actions": [
-                {
-                  "type": {
-                    "value": "PlatformBehavior::SimulateControl"
-                  },
-                  "parameters": [
-                    "Player",
-                    "PlatformerObject",
-                    "\"Right\""
-                  ]
-                },
-                {
-                  "type": {
-                    "value": "FlippableCapability::FlippableBehavior::FlipX"
-                  },
-                  "parameters": [
-                    "Player",
-                    "Flippable",
-                    ""
-                  ]
-                }
-              ]
-            },
             {
               "type": "BuiltinCommonInstructions::Standard",
               "conditions": [
@@ -2114,7 +2414,6 @@
           "colorG": 176,
           "colorR": 74,
           "creationTime": 0,
-          "folded": true,
           "name": "Player Animation",
           "source": "",
           "type": "BuiltinCommonInstructions::Group",
